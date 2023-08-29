@@ -11,7 +11,7 @@ store_size = 30 # korean pyeong
 plan_price = {"에스프레소머신":[15,40], "그라인더": [0, 10], "온수기": [0, 5], "제빙기":[10,15], "냉장고":[5,15], "블렌더":[3, 10]}
 # espresso machine - min 15%, max 40% of of budget | grinder - min 0%, max 10% of budget ... 
 
-plan_weight = {"에스프레소머신":[15,40], "그라인더": [0, 10], "온수기": [0, 5], "제빙기":[10,15], "냉장고":[5,15], "블렌더":[3, 10]}
+plan_weight = {"에스프레소머신":[10,40], "그라인더": [10, 21], "온수기": [10, 15], "제빙기":[18,50], "냉장고":[30,50], "블렌더":[30, 40]}
 # exact proportions need to be updated 
 # espresso machine - min 15%, max 40% of of store size | grinder - min 0%, max 10% of store size ... 
 
@@ -58,7 +58,7 @@ for doc in grinder_min:
 
 grinder_median = db.item.find({"category": "그라인더", 
     "price": {"$gte":(bud*plan_price["그라인더"][1]/100 + bud*plan_price["그라인더"][0]/100)/2},
-    "weight": {"$gte":bud*plan_weight["그라인더"][1]/100}}).sort("price", pymongo.ASCENDING).limit(1)
+    "weight": {"$gte":(bud*plan_weight["그라인더"][1]/100 + bud*plan_weight["그라인더"][0]/100)/2}}).sort("price", pymongo.ASCENDING).limit(1)
 
 for doc in grinder_median:
     print("grinder_median", doc["name"], doc["price"], doc["weight"])
@@ -82,7 +82,7 @@ for doc in boiler_min:
 
 boiler_median = db.item.find({"category": "온수기", 
     "price": {"$gte":(bud*plan_price["온수기"][1]/100 + bud*plan_price["온수기"][0]/100)/2},
-    "weight": {"$gte":bud*plan_weight["온수기"][1]/100}}).sort("price", pymongo.ASCENDING).limit(1)
+    "weight": {"$gte":(bud*plan_weight["온수기"][1]/100 + bud*plan_weight["온수기"][0]/100)/2}}).sort("price", pymongo.ASCENDING).limit(1)
 
 for doc in boiler_median:
     print("boiler_median", doc["name"], doc["price"], doc["weight"])
@@ -104,7 +104,7 @@ for doc in ice_min:
 
 ice_median = db.item.find({"category": "제빙기", 
     "price": {"$gte":(bud*plan_price["제빙기"][1]/100 + bud*plan_price["제빙기"][0]/100)/2},
-    "weight": {"$gte":bud*plan_weight["제빙기"][0]/100}}).sort("price", pymongo.ASCENDING).limit(1)
+    "weight": {"$gte":(bud*plan_weight["제빙기"][0]/100 + bud*plan_weight["제빙기"][0]/100)/2}}).sort("price", pymongo.ASCENDING).limit(1)
 
 for doc in ice_median:
     print("ice_median", doc["name"], doc["price"], doc["weight"])
@@ -127,7 +127,7 @@ for doc in fridge_min:
 
 fridge_median = db.item.find({"category": "냉장고", 
 "price": {"$gte":(bud*plan_price["냉장고"][1]/100 + bud*plan_price["냉장고"][0]/100)/2},
-"weight": {"$gte":bud*plan_weight["냉장고"][1]/100}}).sort("price", pymongo.ASCENDING).limit(1)
+"weight": {"$gte":(bud*plan_weight["냉장고"][1]/100 + bud*plan_weight["냉장고"][0]/100)/2}}).sort("price", pymongo.ASCENDING).limit(1)
 
 for doc in fridge_median:
     print("fridge_median", doc["name"], doc["price"], doc["weight"])
@@ -151,8 +151,9 @@ for doc in blender_min:
 
 blender_median = db.item.find({"category": "블렌더", 
 "price": {"$gte":(bud*plan_price["블렌더"][1]/100 + bud*plan_price["블렌더"][0]/100)/2},
-"weight": {"$gte":bud*plan_weight["블렌더"][1]/100}}).sort("price", pymongo.ASCENDING).limit(1)
+"weight": {"$gte":(bud*plan_weight["블렌더"][1]/100 + bud*plan_weight["블렌더"][0]/100)/2}}).sort("price", pymongo.ASCENDING).limit(1)
 
 for doc in blender_median:
     print("blender_median", doc["name"], doc["price"], doc["weight"])
+
 
