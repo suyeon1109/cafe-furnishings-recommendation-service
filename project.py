@@ -36,7 +36,7 @@ plan_weight = {"에스프레소머신":[10,40], "그라인더": [10, 21], "온�
 
 
 
-# espresso machine recommendation -- price
+# espresso machine recommendation
 espresso_max = db.item.find({"category": "에스프레소머신", 
     "price": {"$lte":bud*plan_price["에스프레소머신"][1]/100}, 
     "weight": {"$lte":bud*plan_weight["에스프레소머신"][1]/100}}).sort("price", pymongo.DESCENDING).limit(1)
@@ -60,7 +60,7 @@ for doc in espresso_median:
 
 
 
-# grinder recommendation -- price
+# grinder recommendation
 grinder_max = db.item.find({"category": "그라인더", 
     "price": {"$lte":bud*plan_price["그라인더"][1]/100},
     "weight": {"$lte":bud*plan_weight["그라인더"][1]/100}}).sort("price", pymongo.DESCENDING).limit(1)
@@ -84,7 +84,7 @@ for doc in grinder_median:
 
 
 
-# boiler recommendation -- price
+# boiler recommendation
 boiler_max = db.item.find({"category": "온수기", 
     "price": {"$lte":bud*plan_price["온수기"][1]/100},
     "weight": {"$lte":bud*plan_weight["온수기"][1]/100}}).sort("price", pymongo.DESCENDING).limit(1)
@@ -108,7 +108,7 @@ for doc in boiler_median:
 
 
 
-# ice maker recommendation -- price
+# ice maker recommendation
 ice_max = db.item.find({"category": "제빙기", 
     "price": {"$lte":bud*plan_price["제빙기"][1]/100},
     "weight": {"$lte":bud*plan_weight["제빙기"][1]/100}}).sort("price", pymongo.DESCENDING).limit(1)
@@ -131,7 +131,7 @@ for doc in ice_median:
     print("ice_median", doc["name"], doc["price"], doc["weight"])
 
 
-# refrigerator recommendation -- price
+# refrigerator recommendation
 fridge_max = db.item.find({"category": "냉장고", 
     "price": {"$lte":bud*plan_price["냉장고"][1]/100},
     "weight": {"$lte":bud*plan_weight["냉장고"][1]/100}}).sort("price", pymongo.DESCENDING).limit(1)
@@ -155,7 +155,7 @@ for doc in fridge_median:
 
 
 
-# blender recommendation -- price
+# blender recommendation
 blender_max = db.item.find({"category": "블렌더", 
     "price": {"$lte":bud*plan_price["블렌더"][1]/100},
     "weight": {"$lte":bud*plan_weight["블렌더"][1]/100}}).sort("price", pymongo.DESCENDING).limit(1)
