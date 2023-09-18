@@ -16,7 +16,7 @@ store_size = int(input("카페 평수 (기준: 평): "))
 plan_price = {"에스프레소머신":[15,40], "그라인더": [0, 10], "온수기": [0, 5], "제빙기":[10,15], "냉장고":[5,15]} 
 # , "블렌더":[3, 10]}
 # espresso machine - min 15%, max 40% of of budget | grinder - min 0%, max 10% of budget ...
- 
+
 em_range = [4,101]
 gr_range = [1,35]
 bo_range = [10,13]
@@ -92,8 +92,6 @@ def weight_range(store_size):
         return weight_3050 
     if store_size < 100:
         return weight_50100 
-
-
 
 
 
