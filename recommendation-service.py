@@ -148,12 +148,33 @@ for doc in espresso_median:
         break
 
 # 기준에 맞는 제품이 하나도 없을 때 
-espresso_all = db.item.find({"option": "에스프레소 머신"}).sort("price", pymongo.ASCENDING).limit(3)
 
 if printed==0:
-    for doc in espresso_all:
-        print(doc["name"]+",", str(get_weight(doc))+"kg,", str(doc["price"])+"원")
+    espresso_left = espresso_min = db.item.find(
+        {"option": "에스프레소머신", 
+        "price": {"$lte":bud*plan_price["에스프레소머신"][0]/100}
+    }).sort("price", pymongo.ASCENDING).limit(10)
+    espresso_right = db.item.find({
+        "option": "에스프레소머신", 
+        "price": {"$gte":bud*plan_price["에스프레소머신"][1]/100}
+    }).sort("price", pymongo.DESCENDING).limit(10)
+
+    for doc in espresso_left:
+        if (weight >= standard["에스프레소머신"][0] and weight<= standard["에스프레소머신"][1]):
+            print(doc["name"]+",", str(get_weight(doc))+"kg,", str(doc["price"])+"원")
+            printed+=1
+        if printed==2:
+            break
+    
+    for doc in espresso_right:
+        if (weight >= standard["에스프레소머신"][0] and weight<= standard["에스프레소머신"][1]):
+            print(doc["name"]+",", str(get_weight(doc))+"kg,", str(doc["price"])+"원")
+            printed+=1
+        if printed==4:
+            break
 print()
+
+
 
 
 
@@ -202,12 +223,31 @@ for doc in grinder_median:
         break
 
 # 기준에 맞는 제품이 하나도 없을 때 
-grinder_all = db.item.find({"option": "그라인더"}).sort("price", pymongo.ASCENDING).limit(3)
-
 if printed==0:
-    for doc in grinder_all:
-        print(doc["name"]+",", str(get_weight(doc))+"kg,", str(doc["price"])+"원")
-print()
+    grinder_left = db.item.find(
+        {"option": "그라인더", 
+        "price": {"$lte":bud*plan_price["그라인더"][0]/100}
+    }).sort("price", pymongo.ASCENDING).limit(10)
+    grinder_right = db.item.find({
+        "option": "그라인더", 
+        "price": {"$gte":bud*plan_price["그라인더"][1]/100}
+    }).sort("price", pymongo.DESCENDING).limit(10)
+
+    for doc in grinder_left:
+        if (weight >= standard["그라인더"][0] and weight<= standard["그라인더"][1]):
+            print(doc["name"]+",", str(get_weight(doc))+"kg,", str(doc["price"])+"원")
+            printed+=1
+        if printed==2:
+            break
+    
+    for doc in grinder_right:
+        if (weight >= standard["그라인더"][0] and weight<= standard["그라인더"][1]):
+            print(doc["name"]+",", str(get_weight(doc))+"kg,", str(doc["price"])+"원")
+            printed+=1
+        if printed==4:
+            break
+
+
 
 
 
@@ -257,13 +297,32 @@ for doc in boiler_min:
         break
 
 # 기준에 맞는 제품이 하나도 없을 때 
-boiler_all = db.item.find({"option": "온수기"}).sort("price", pymongo.ASCENDING).limit(3)
-
 if printed==0:
-    for doc in boiler_all:
-        print(doc["name"]+",", str(get_weight(doc))+"kg,", str(doc["price"])+"원")
+    boiler_left = boiler_min = db.item.find(
+        {"option": "온수기", 
+        "price": {"$lte":bud*plan_price["온수기"][0]/100}
+    }).sort("price", pymongo.ASCENDING).limit(10)
+    boiler_right = db.item.find({
+        "option": "온수기", 
+        "price": {"$gte":bud*plan_price["온수기"][1]/100}
+    }).sort("price", pymongo.DESCENDING).limit(10)
 
+    for doc in boiler_left:
+        if (weight >= standard["온수기"][0]-10 and weight<= standard["온수기"][1]+10):
+            print(doc["name"]+",", str(get_weight(doc))+"kg,", str(doc["price"])+"원")
+            printed+=1
+        if printed==2:
+            break
+    
+    for doc in boiler_right:
+        if (weight >= standard["온수기"][0]-10 and weight<= standard["온수기"][1]+10):
+            print(doc["name"]+",", str(get_weight(doc))+"kg,", str(doc["price"])+"원")
+            printed+=1
+        if printed==4:
+            break
 print()
+
+
 
 
 
@@ -312,12 +371,33 @@ for doc in ice_median:
         break
 
 # 기준에 맞는 제품이 하나도 없을 때 
-ice_all = db.item.find({"option": "제빙기"}).sort("price", pymongo.ASCENDING).limit(3)
-
 if printed==0:
-    for doc in ice_all:
-        print(doc["name"]+",", str(get_weight(doc))+"kg,", str(doc["price"])+"원")
+    ice_left = ice_min = db.item.find(
+        {"option": "제빙기", 
+        "price": {"$lte":bud*plan_price["제빙기"][0]/100}
+    }).sort("price", pymongo.ASCENDING).limit(10)
+    ice_right = db.item.find({
+        "option": "제빙기", 
+        "price": {"$gte":bud*plan_price["제빙기"][1]/100}
+    }).sort("price", pymongo.DESCENDING).limit(10)
+
+    for doc in ice_left:
+        if (weight >= standard["제빙기"][0] and weight<= standard["제빙기"][1]):
+            print(doc["name"]+",", str(get_weight(doc))+"kg,", str(doc["price"])+"원")
+            printed+=1
+        if printed==2:
+            break
+    
+    for doc in ice_right:
+        if (weight >= standard["제빙기"][0] and weight<= standard["제빙기"][1]):
+            print(doc["name"]+",", str(get_weight(doc))+"kg,", str(doc["price"])+"원")
+            printed+=1
+        if printed==4:
+            break
 print()
+
+
+
 
 
 # 냉장고
@@ -365,9 +445,26 @@ for doc in fridge_median:
         break
 
 # 기준에 맞는 제품이 하나도 없을 때 
-fridge_all = db.item.find({"option": "냉장고"}).sort("price", pymongo.ASCENDING).limit(3)
-
 if printed==0:
-    for doc in fridge_all:
-        print(doc["name"]+",", str(get_weight(doc))+"kg,", str(doc["price"])+"원")
-print()
+    fridge_left = fridge_min = db.item.find(
+        {"option": "냉장고", 
+        "price": {"$lte":bud*plan_price["냉장고"][0]/100}
+    }).sort("price", pymongo.ASCENDING).limit(10)
+    fridge_right = db.item.find({
+        "option": "냉장고", 
+        "price": {"$gte":bud*plan_price["냉장고"][1]/100}
+    }).sort("price", pymongo.DESCENDING).limit(10)
+
+    for doc in fridge_left:
+        if (weight >= standard["냉장고"][0] and weight<= standard["냉장고"][1]):
+            print(doc["name"]+",", str(get_weight(doc))+"kg,", str(doc["price"])+"원")
+            printed+=1
+        if printed==2:
+            break
+    
+    for doc in fridge_right:
+        if (weight >= standard["냉장고"][0] and weight<= standard["냉장고"][1]):
+            print(doc["name"]+",", str(get_weight(doc))+"kg,", str(doc["price"])+"원")
+            printed+=1
+        if printed==4:
+            break
