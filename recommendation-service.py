@@ -115,171 +115,171 @@ def weight_range(store_size):
 standard = weight_range(store_size)
 
 # 에스프레소 머신
-printed = 0
-# 예산 안에서 가장 비싼 & 무게 기준 안에 들어오는 기계
-espresso_max = db.item.find({
-    "option": "에스프레소 머신", 
-    "price": {"$lte":bud*plan_price["에스프레소머신"][1]/100}
-}).sort("price", pymongo.DESCENDING).limit(10)
-
-price=0
-
-print("추천드리는 에스프레소 머신")
-if espresso_max.count()!=0:
-    price+=1
-    for doc in espresso_max:
-        weight = get_weight(doc)
-        standard = weight_range(store_size)
-        if (weight >= standard["에스프레소머신"][0] and weight<= standard["에스프레소머신"][1]):
-            print(doc["name"]+",", str(weight)+"kg,", str(doc["price"])+"원")
-            printed+=1
-        if printed==2:
-            break
-
-# 예산 안에서 가장 싼 & 무게 기준 안에 들어오는 기계
-espresso_min = db.item.find(
-    {"option": "에스프레소머신", 
-    "price": {"$gte":bud*plan_price["에스프레소머신"][0]/100}
-}).sort("price", pymongo.ASCENDING).limit(10)
-
-if espresso_min.count()!=0:
-    price+=1
-    for doc in espresso_min:
-        weight = get_weight(doc)
-        standard = weight_range(store_size)
-        if (weight >= standard["에스프레소머신"][0] and weight<= standard["에스프레소머신"][1]):
-            print(doc["name"]+",", str(weight)+"kg,", str(doc["price"])+"원")
-            printed+=1
-        if printed==4:
-            break
-
-# 예산 안에서 중간 & 무게 기준 안에 들어오는 기계
-espresso_median = db.item.find(
-    {"option": "에스프레소머신", 
-    "price": {"$gte":(bud*plan_price["에스프레소머신"][1]/100 + bud*plan_price["에스프레소머신"][0]/100)/2}}
-).sort("price", pymongo.ASCENDING).limit(10)
-
-if espresso_median.count()!=0:
-    price+=1
-    for doc in espresso_median:
-        weight = get_weight(doc)
-        standard = weight_range(store_size)
-        if (weight >= standard["에스프레소머신"][0] and weight<= standard["에스프레소머신"][1]):
-            print(doc["name"]+",", str(weight)+"kg,", str(doc["price"])+"원")
-            printed+=1
-        if printed==6:
-            break
-
-
-# 기준에 맞는 제품이 하나도 없을 때 
-if price==0: # 가격 범위에 맞는 제품이 없었을 때
-    espresso_left = espresso_min = db.item.find(
-        {"option": "에스프레소머신", 
-        "price": {"$lte":bud*plan_price["에스프레소머신"][0]/100}
-    }).sort("price", pymongo.ASCENDING).limit(10)
-    espresso_right = db.item.find({
-        "option": "에스프레소머신", 
-        "price": {"$gte":bud*plan_price["에스프레소머신"][1]/100}
-    }).sort("price", pymongo.DESCENDING).limit(10)
-
-    for doc in espresso_left:
-        if (weight >= standard["에스프레소머신"][0] and weight<= standard["에스프레소머신"][1]):
-            print(doc["name"]+",", str(get_weight(doc))+"kg,", str(doc["price"])+"원")
-            printed+=1
-        if printed==2:
-            break
-    
-    for doc in espresso_right:
-        if (weight >= standard["에스프레소머신"][0] and weight<= standard["에스프레소머신"][1]):
-            print(doc["name"]+",", str(get_weight(doc))+"kg,", str(doc["price"])+"원")
-            printed+=1
-        if printed==4:
-            break
-elif printed==0: # 가격은 맞는데 무게가 안맞았던 경우
-    machine_lists = [espresso_max,espresso_median, espresso_min]
-    for list in machine_lists:
-        for doc in list:
-            weight = get_weight(doc)
-            standard = weight_range(store_size)
-            if (weight >= standard["에스프레소머신"][0]-10 and weight<= standard["에스프레소머신"][1]+10):
-                print(doc["name"]+",", str(weight)+"kg,", str(doc["price"])+"원")
-                printed+=1
-            if printed==2:
-                break
-print()
-
-
-
-
-
-# # 그라인더
 # printed = 0
 # # 예산 안에서 가장 비싼 & 무게 기준 안에 들어오는 기계
-# grinder_max = db.item.find({
-#     "option": "그라인더", 
-#     "price": {"$lte":bud*plan_price["그라인더"][1]/100}
+# espresso_max = db.item.find({
+#     "option": "에스프레소 머신", 
+#     "price": {"$lte":bud*plan_price["에스프레소머신"][1]/100}
 # }).sort("price", pymongo.DESCENDING).limit(10)
 
-# print("추천드리는 그라인더")
-# for doc in grinder_max:
-#     weight = get_weight(doc)
-#     if (weight >= standard["그라인더"][0] and weight<= standard["그라인더"][1]):
-#         print(doc["name"]+",", str(weight)+"kg,", str(doc["price"])+"원")
-#         printed+=1
-#     if printed==2:
-#         break
+# price=0
+
+# print("추천드리는 에스프레소 머신")
+# if len(list(espresso_max))!=0:
+#     price+=1
+#     for doc in espresso_max:
+#         weight = get_weight(doc)
+#         standard = weight_range(store_size)
+#         if (weight >= standard["에스프레소머신"][0] and weight<= standard["에스프레소머신"][1]):
+#             print(doc["name"]+",", str(weight)+"kg,", str(doc["price"])+"원")
+#             printed+=1
+#         if printed==2:
+#             break
 
 # # 예산 안에서 가장 싼 & 무게 기준 안에 들어오는 기계
-# grinder_min = db.item.find({"option": "그라인더", 
-#     "price": {"$gte":bud*plan_price["그라인더"][0]/100}}
-# ).sort("price", pymongo.ASCENDING).limit(10)
+# espresso_min = db.item.find(
+#     {"option": "에스프레소머신", 
+#     "price": {"$gte":bud*plan_price["에스프레소머신"][0]/100}
+# }).sort("price", pymongo.ASCENDING).limit(10)
 
-# for doc in grinder_min:
-#     weight = get_weight(doc)
-#     if (weight >= standard["그라인더"][0] and weight<= standard["그라인더"][1]):
-#         print(doc["name"]+",", str(weight)+"kg,", str(doc["price"])+"원")
-#         printed+=1
-#     if printed==4:
-#         break
+# if len(list(espresso_min))!=0:
+#     price+=1
+#     for doc in espresso_min:
+#         weight = get_weight(doc)
+#         standard = weight_range(store_size)
+#         if (weight >= standard["에스프레소머신"][0] and weight<= standard["에스프레소머신"][1]):
+#             print(doc["name"]+",", str(weight)+"kg,", str(doc["price"])+"원")
+#             printed+=1
+#         if printed==4:
+#             break
 
 # # 예산 안에서 중간 & 무게 기준 안에 들어오는 기계
-# grinder_median = db.item.find(
-#     {"option": "그라인더", 
-#     "price": {"$gte":(bud*plan_price["그라인더"][1]/100 + bud*plan_price["그라인더"][0]/100)/2}}
+# espresso_median = db.item.find(
+#     {"option": "에스프레소머신", 
+#     "price": {"$gte":(bud*plan_price["에스프레소머신"][1]/100 + bud*plan_price["에스프레소머신"][0]/100)/2}}
 # ).sort("price", pymongo.ASCENDING).limit(10)
 
-# for doc in grinder_median:
-#     weight = get_weight(doc)
-#     if (weight >= standard["그라인더"][0] and weight<= standard["그라인더"][1]):
-#         print(doc["name"]+",", str(weight)+"kg,", str(doc["price"])+"원")
-#         printed+=1
-#     if printed==6:
-#         break
+# if len(list(espresso_median))!=0:
+#     price+=1
+#     for doc in espresso_median:
+#         weight = get_weight(doc)
+#         standard = weight_range(store_size)
+#         if (weight >= standard["에스프레소머신"][0] and weight<= standard["에스프레소머신"][1]):
+#             print(doc["name"]+",", str(weight)+"kg,", str(doc["price"])+"원")
+#             printed+=1
+#         if printed==6:
+#             break
+
 
 # # 기준에 맞는 제품이 하나도 없을 때 
-# if printed==0:
-#     grinder_left = db.item.find(
-#         {"option": "그라인더", 
-#         "price": {"$lte":bud*plan_price["그라인더"][0]/100}
+# if price==0: # 가격 범위에 맞는 제품이 없었을 때
+#     espresso_left = espresso_min = db.item.find(
+#         {"option": "에스프레소머신", 
+#         "price": {"$lte":bud*plan_price["에스프레소머신"][0]/100}
 #     }).sort("price", pymongo.ASCENDING).limit(10)
-#     grinder_right = db.item.find({
-#         "option": "그라인더", 
-#         "price": {"$gte":bud*plan_price["그라인더"][1]/100}
+#     espresso_right = db.item.find({
+#         "option": "에스프레소머신", 
+#         "price": {"$gte":bud*plan_price["에스프레소머신"][1]/100}
 #     }).sort("price", pymongo.DESCENDING).limit(10)
 
-#     for doc in grinder_left:
-#         if (weight >= standard["그라인더"][0] and weight<= standard["그라인더"][1]):
+#     for doc in espresso_left:
+#         if (weight >= standard["에스프레소머신"][0] and weight<= standard["에스프레소머신"][1]):
 #             print(doc["name"]+",", str(get_weight(doc))+"kg,", str(doc["price"])+"원")
 #             printed+=1
 #         if printed==2:
 #             break
     
-#     for doc in grinder_right:
-#         if (weight >= standard["그라인더"][0] and weight<= standard["그라인더"][1]):
+#     for doc in espresso_right:
+#         if (weight >= standard["에스프레소머신"][0] and weight<= standard["에스프레소머신"][1]):
 #             print(doc["name"]+",", str(get_weight(doc))+"kg,", str(doc["price"])+"원")
 #             printed+=1
 #         if printed==4:
 #             break
+# elif printed==0: # 가격은 맞는데 무게가 안맞았던 경우
+#     machine_lists = [espresso_max,espresso_median, espresso_min]
+#     for list in machine_lists:
+#         for doc in list:
+#             weight = get_weight(doc)
+#             standard = weight_range(store_size)
+#             if (weight >= standard["에스프레소머신"][0]-10 and weight<= standard["에스프레소머신"][1]+10):
+#                 print(doc["name"]+",", str(weight)+"kg,", str(doc["price"])+"원")
+#                 printed+=1
+#             if printed==2:
+#                 break
+# print()
+
+
+
+
+
+# 그라인더
+printed = 0
+# 예산 안에서 가장 비싼 & 무게 기준 안에 들어오는 기계
+grinder_max = db.item.find({
+    "option": "그라인더", 
+    "price": {"$lte":bud*plan_price["그라인더"][1]/100}
+}).sort("price", pymongo.DESCENDING).limit(10)
+
+print("추천드리는 그라인더")
+for doc in grinder_max:
+    weight = get_weight(doc)
+    if (weight >= standard["그라인더"][0] and weight<= standard["그라인더"][1]):
+        print(doc["name"]+",", str(weight)+"kg,", str(doc["price"])+"원")
+        printed+=1
+    if printed==2:
+        break
+
+# 예산 안에서 가장 싼 & 무게 기준 안에 들어오는 기계
+grinder_min = db.item.find({"option": "그라인더", 
+    "price": {"$gte":bud*plan_price["그라인더"][0]/100}}
+).sort("price", pymongo.ASCENDING).limit(10)
+
+for doc in grinder_min:
+    weight = get_weight(doc)
+    if (weight >= standard["그라인더"][0] and weight<= standard["그라인더"][1]):
+        print(doc["name"]+",", str(weight)+"kg,", str(doc["price"])+"원")
+        printed+=1
+    if printed==4:
+        break
+
+# 예산 안에서 중간 & 무게 기준 안에 들어오는 기계
+grinder_median = db.item.find(
+    {"option": "그라인더", 
+    "price": {"$gte":(bud*plan_price["그라인더"][1]/100 + bud*plan_price["그라인더"][0]/100)/2}}
+).sort("price", pymongo.ASCENDING).limit(10)
+
+for doc in grinder_median:
+    weight = get_weight(doc)
+    if (weight >= standard["그라인더"][0] and weight<= standard["그라인더"][1]):
+        print(doc["name"]+",", str(weight)+"kg,", str(doc["price"])+"원")
+        printed+=1
+    if printed==6:
+        break
+
+# 기준에 맞는 제품이 하나도 없을 때 
+if printed==0:
+    grinder_left = db.item.find(
+        {"option": "그라인더", 
+        "price": {"$lte":bud*plan_price["그라인더"][0]/100}
+    }).sort("price", pymongo.ASCENDING).limit(10)
+    grinder_right = db.item.find({
+        "option": "그라인더", 
+        "price": {"$gte":bud*plan_price["그라인더"][1]/100}
+    }).sort("price", pymongo.DESCENDING).limit(10)
+
+    for doc in grinder_left:
+        if (weight >= standard["그라인더"][0] and weight<= standard["그라인더"][1]):
+            print(doc["name"]+",", str(get_weight(doc))+"kg,", str(doc["price"])+"원")
+            printed+=1
+        if printed==2:
+            break
+    
+    for doc in grinder_right:
+        if (weight >= standard["그라인더"][0] and weight<= standard["그라인더"][1]):
+            print(doc["name"]+",", str(get_weight(doc))+"kg,", str(doc["price"])+"원")
+            printed+=1
+        if printed==4:
+            break
 
 
 
