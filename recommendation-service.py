@@ -125,7 +125,7 @@ espresso_max = db.item.find({
 price=0
 
 print("추천드리는 에스프레소 머신")
-if len(espresso_max)!=0:
+if espresso_max.count()!=0:
     price+=1
     for doc in espresso_max:
         weight = get_weight(doc)
@@ -142,7 +142,7 @@ espresso_min = db.item.find(
     "price": {"$gte":bud*plan_price["에스프레소머신"][0]/100}
 }).sort("price", pymongo.ASCENDING).limit(10)
 
-if len(espresso_min)!=0:
+if espresso_min.count()!=0:
     price+=1
     for doc in espresso_min:
         weight = get_weight(doc)
@@ -159,7 +159,7 @@ espresso_median = db.item.find(
     "price": {"$gte":(bud*plan_price["에스프레소머신"][1]/100 + bud*plan_price["에스프레소머신"][0]/100)/2}}
 ).sort("price", pymongo.ASCENDING).limit(10)
 
-if espresso_median!=0:
+if espresso_median.count()!=0:
     price+=1
     for doc in espresso_median:
         weight = get_weight(doc)
@@ -172,8 +172,7 @@ if espresso_median!=0:
 
 
 # 기준에 맞는 제품이 하나도 없을 때 
-
-if price==0:
+if price==0: # 가격 범위에 맞는 제품이 없었을 때
     espresso_left = espresso_min = db.item.find(
         {"option": "에스프레소머신", 
         "price": {"$lte":bud*plan_price["에스프레소머신"][0]/100}
@@ -196,7 +195,7 @@ if price==0:
             printed+=1
         if printed==4:
             break
-elif printed==0:
+elif printed==0: # 가격은 맞는데 무게가 안맞았던 경우
     machine_lists = [espresso_max,espresso_median, espresso_min]
     for list in machine_lists:
         for doc in list:
