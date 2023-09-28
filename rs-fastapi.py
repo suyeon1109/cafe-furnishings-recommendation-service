@@ -10,19 +10,6 @@ def startup_db_client():
     project.mongodb_client = MongoClient("mongodb+srv://kk1109kk1109:sYFQfX5J28YD71Ls@cluster0.5pusjkc.mongodb.net/", tlsCAFile=certifi.where())
     project.database = project.mongodb_client["Cluster0"]
 
-inventory = {
-    1: {
-        "name": "Milk",
-        "price": "3.99",
-        "brand": "Regular"
-    },
-    2: {
-        "name": "Sprite",
-        "price": "1.99",
-        "brand": "Regular"
-    }
-}
-
 class Plan(BaseModel):
     bud: str
     store_size: str
