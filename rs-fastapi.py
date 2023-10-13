@@ -1,22 +1,23 @@
-from fastapi import FastAPI
 from typing import List
+from pydantic import BaseModel
+from fastapi import FastAPI, Path
+from pymongo import MongoClient
 from pydantic import BaseModel
 import pymongo
 import certifi
 
 app = FastAPI()
 
+@app.on_event("startup")
+def startup_db_client():
 # 몽고디비 불러오기
-client = pymongo.MongoClient("mongodb+srv://kk1109kk1109:sYFQfX5J28YD71Ls@cluster0.5pusjkc.mongodb.net/", tlsCAFile=certifi.where())
-db = client["Cluster0"]
+    app.mongodb_client = MongoClient("mongodb+srv://kk1109kk1109:sYFQfX5J28YD71Ls@cluster0.5pusjkc.mongodb.net/", tlsCAFile=certifi.where())
+    app.database = app.mongodb_client["Cluster0"]
 
 class Item(BaseModel):
     bud: int
     store_size: int
-
-# 답변 불러오기
-bud = int(input("예산 (기준: 원): "))
-store_size = int(input("카페 평수 (기준: 평): "))
+    user_id: str
 
 # 기준 설정
 plan_price = {"에스프레소머신":[15,40], "그라인더": [0, 10], "온수기": [0, 5], "제빙기":[10,15], "냉장고":[5,15]} 
@@ -66,15 +67,9 @@ def get_weights(items):
     for doc in items:
         description = doc["optDescription"].split(": ",maxsplit=1)
         description = description[1].split("\n",maxsplit=1)
-        # size_list = description[0].split(" x ")
-        # size_list = [eval(i) for i in size_list]
-        # print("size_list", size_list)
-
         description = description[1].split(": ",maxsplit=1)
         description = description[1].split("\n",maxsplit=1)
         weight = int(description[0])
-        # print("weight", weight)
-
         weight_list.append([doc["name"],weight])
     return weight_list
 
@@ -85,7 +80,6 @@ def get_weight(item):
     description = description[1].split(": ",maxsplit=1)
     description = description[1].split("\n",maxsplit=1)
     weight = float(description[0])
-    # print("weight", weight)
     return weight
 
 def weight_range(store_size):
@@ -98,6 +92,11 @@ def weight_range(store_size):
     if store_size < 100:
         return weight_50100 
 
+@app.get("/answers/{user_id}/budget/{budget}")
+async def get_budget(user_id:str):
+    app.database.answers.find_one({""})
+    return 
+
 
 @app.post("/recommend_grinders", response_model=List[str])
 def recommend_grinders(item: Item):
@@ -109,7 +108,7 @@ def recommend_grinders(item: Item):
     recommendations = []
 
     # Find the most expensive grinders within budget and weight range
-    grinder_max = db.item.find(
+    grinder_max = app.database.item.find(
         {
             "option": "그라인더",
             "price": {"$lte": bud * plan_price["그라인더"][1] / 100}
@@ -125,7 +124,7 @@ def recommend_grinders(item: Item):
             break
 
     # Find the cheapest grinders within budget and weight range
-    grinder_min = db.item.find(
+    grinder_min = app.database.item.find(
         {
             "option": "그라인더",
             "price": {"$gte": bud * plan_price["그라인더"][0] / 100}
@@ -141,7 +140,7 @@ def recommend_grinders(item: Item):
             break
 
     # Find grinders with prices in between budget and weight range
-    grinder_median = db.item.find(
+    grinder_median = app.database.item.find(
         {
             "option": "그라인더",
             "price": {
@@ -160,14 +159,14 @@ def recommend_grinders(item: Item):
 
     # If there are no items within the specified weight range
     if printed == 0:
-        grinder_left = db.item.find(
+        grinder_left = app.database.item.find(
             {
                 "option": "그라인더",
                 "price": {"$lte": bud * plan_price["그라인더"][0] / 100}
             }
         ).sort("price", pymongo.ASCENDING).limit(10)
 
-        grinder_right = db.item.find(
+        grinder_right = app.database.item.find(
             {
                 "option": "그라인더",
                 "price": {"$gte": bud * plan_price["그라인더"][1] / 100}
