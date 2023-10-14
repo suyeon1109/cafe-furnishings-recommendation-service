@@ -18,6 +18,7 @@ class Item(BaseModel):
     bud: int
     store_size: int
     user_id: str
+    user_name: str
 
 # 기준 설정
 plan_price = {"에스프레소머신":[15,40], "그라인더": [0, 10], "온수기": [0, 5], "제빙기":[10,15], "냉장고":[5,15]} 
@@ -92,10 +93,11 @@ def weight_range(store_size):
     if store_size < 100:
         return weight_50100 
 
-@app.get("/answers/{user_id}/budget/{budget}")
-async def get_budget(user_id:str):
-    app.database.answers.find_one({""})
-    return 
+@app.get(".answers/")
+async def set_user(user_input:Item):
+    data = user_input.dict()
+    app.database.answers.insert_one(data)
+    return {"message": "The data is stored successfully."}
 
 
 @app.post("/recommend_grinders", response_model=List[str])
