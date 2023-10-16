@@ -93,17 +93,17 @@ def weight_range(store_size):
     if store_size < 100:
         return weight_50100 
 
-@app.get(".answers/")
+@app.post("/answers/")
 async def set_user(user_input:Item):
     data = user_input.dict()
     app.database.answers.insert_one(data)
-    return {"message": "The data is stored successfully."}
+#     return {"message": "The data is stored successfully."}
 
 
-@app.post("/recommend_grinders", response_model=List[str])
-def recommend_grinders(item: Item):
-    bud = item.bud
-    store_size = item.store_size
+# @app.get("/recommend_grinders", response_model=List[str])
+# def recommend_grinders(item: Item):
+    bud = user_input.bud
+    store_size = user_input.store_size
     standard = weight_range(store_size)
     
     printed = 0
